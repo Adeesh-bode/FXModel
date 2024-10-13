@@ -4,3 +4,4 @@ fastapi
 uvicorn
 scikit-learn 
 pandas
+prisma

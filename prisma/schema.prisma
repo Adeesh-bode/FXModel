@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum region_identity {
+  work
+  home
+  school
+  other
+}
+
+model User {
+  id String @id @default(uuid())
+  name    String
+  email   String? @unique
+  phone_number String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  preference Preference? // one to one relationship // preference Preference[] if one to many relationship
+  region region[] // one to many relationship
+}
+
+model Preference {
+  preference_id Int @id @default(autoincrement())
+  style   String
+ 
+  user User @relation(fields: [userId], references: [id] , onDelete: Cascade, onUpdate: Cascade ) 
+  userId      String @unique // if one to many/vaha array than this cant be unique
+}
+
+model region {
+  region_id String @id @default(uuid())
+  region_name region_identity
+  country String
+  state String
+  city String
+  street String
+  pincode Int
+
+  user User @relation(fields: [userId], references: [id] , onDelete: Cascade, onUpdate: Cascade )
+  userId      String 
+}

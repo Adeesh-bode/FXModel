@@ -29,7 +29,7 @@ class UserInput(BaseModel):
 # Define the endpoint to get the top 10 matches
 @app.post("/match/")
 async def get_matches(user: UserInput):
-    csv_file = os.path.join(os.path.dirname(__file__), 'dataset', 'user_data.csv')
+    csv_file = os.path.join(os.path.dirname(__file__), 'dataset', 'synthetic_users_with_weight.csv')
     
     try:
         new_user = user.dict()
@@ -39,6 +39,9 @@ async def get_matches(user: UserInput):
         raise HTTPException(status_code=500, detail=f"Error finding matches: {e}")
     
 
+@app.post('/user/')
+async def create_user(user: UserInput):
+    return user
 
 @app.get("/")
 async def read_root():
@@ -52,33 +55,24 @@ async def read_root():
 
 #############testing
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import os
-
-app = FastAPI()
-
-# Assuming the UserInput class exists
-class UserInput(BaseModel):
-    Size_Top: str
-    Size_Bottom: str
-    Age: int
-    Weight: int
-    Height: int
-    Style_Preference: str
-    Preferred_Colors: str
-
-def find_best_matches(csv_file, new_user):
-    # Dummy function for now
-    return [{"match": "Best Match 1"}, {"match": "Best Match 2"}]
-
-# GET request to match based on query parameters
 @app.get("/match/")
 async def get_matches(Size_Top: str, Size_Bottom: str, Age: int, Weight: int, Height: int, Style_Preference: str, Preferred_Colors: str):
-    csv_file = os.path.join(os.path.dirname(__file__), 'dataset', 'user_data.csv')
+    csv_file = os.path.join(os.path.dirname(__file__), 'dataset', 'synthetic_users_with_weight.csv')
     
+
+    # sample object
+
+    # {
+    #     'Size_Top': 'M',
+    #     'Size_Bottom': 'L',
+    #     'Height': 168,
+    #     'Weight': 70,
+    #     'Age': 25,
+    #     'Style_Preference': 'Casual',
+    #     'Preferred_Colors': 'Blue'
+    # }
+
     try:
-        # Simulating the user input by gathering from query parameters
         new_user = {
             "Size_Top": Size_Top,
             "Size_Bottom": Size_Bottom,
@@ -93,6 +87,10 @@ async def get_matches(Size_Top: str, Size_Bottom: str, Age: int, Weight: int, He
         
         matches = find_best_matches(csv_file, new_user)
         print(matches)
-        return {"matches": matches , "new_user": new_user} 
+        
+        # Convert matches DataFrame to JSON-serializable format    ##### IMP
+        matches_json = matches.to_dict(orient='records')
+        
+        return {"matches": matches_json, "new_user": new_user}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error finding matches: {e}")
