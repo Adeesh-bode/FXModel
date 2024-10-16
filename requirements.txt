@@ -1,4 +1,8 @@
-# just pip install -r requirements.txt
+# just pip install -r requirements.txt 
+# -r flag, pip reads the file and installs each of the listed packages along with their specified versions.
+
+# package1==1.0.0
+# package2>=2.0.0
 
 fastapi 
 uvicorn

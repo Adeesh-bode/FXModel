@@ -4,10 +4,21 @@ from app.models.ml_model import find_best_matches
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
+# from prisma import Prisma
+# prisma = Prisma()
+
+
 
 
 
 app = FastAPI()
+# @app.on_event("startup")
+# async def startup():
+#     await prisma.connect()
+
+# @app.on_event("shutdown")
+# async def shutdown():
+#     await prisma.disconnect()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allows all origins
@@ -41,7 +52,23 @@ async def get_matches(user: UserInput):
 
 @app.post('/user/')
 async def create_user(user: UserInput):
-    return user
+    try:
+        # Create user in the database
+        created_user = await prisma.user.create(
+            data={
+                'Size_Top': user.Size_Top,
+                'Size_Bottom': user.Size_Bottom,
+                'Age': user.Age,
+                'Weight': user.Weight,
+                'Height': user.Height,
+                'Style_Preference': user.Style_Preference,
+                'Preferred_Colors': user.Preferred_Colors
+            }
+        )
+        return created_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating user: {e}")
+
 
 @app.get("/")
 async def read_root():
