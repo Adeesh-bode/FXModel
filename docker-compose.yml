@@ -1,0 +1,32 @@
+# of compose file format
+version: "3.8"
+
+# A Dockerfile is used to build an image for a single container. 
+# Docker Compose is a tool that defines and manages multiple services (containers) that together form an application. It is used to orchestrate how different containers should run together, specifying volumes, networks, environment variables, and linking services.
+
+# In the docker-compose.yml file, you're telling Docker to:
+  #Build the image using the Dockerfile
+  # Define port mappings, environment variables, and volume mounts.
+  # Run multiple containers (if needed)
+
+# While Docker Compose extends Docker, it still requires a Dockerfile to define how to build the individual container.
+services:
+  # 'app' service , main apptn in this setup 
+  app:
+    # specifier docker file location & should be used to build docker image
+    build: .
+    # maps port 8000 of host to port 8000 of container
+    ports:
+      - "8000:8000"
+    # mounts current directory (.)  to /app in container in the host machine 
+    # it maps the current directory to /app inside the container ((( avoiding the need to rebuild the image after every local change)))
+    volumes:
+      - .:/app
+    
+    # set an envirn variable inside the container
+    # `POETRY_VIRTUALENVS_CREATE=false` disables Poetry's creation of a virtual environment,
+    # so its uses system environment ( directly inside the docker container)
+    environment:
+      - POETRY_VIRTUALENVS_CREATE=false
+
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
