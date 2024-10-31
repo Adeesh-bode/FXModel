@@ -50,7 +50,7 @@ async def get_matches(user: UserInput):
 @app.post('/user/' , summary="Create a new user", description="This endpoint allows you to create a new user.")
 async def create_user_new(user: UserInput):
     try:
-        # Create user in the database
+        # todo : Create user in the database 
         created_user = await prisma.user.create(
             data={
                 'Size_Top': user.Size_Top,
