@@ -26,7 +26,7 @@ jobs:
       - name: Transfer files to EC2
         # Secure copyprotocol - SCP uses SSH to transfer data- files are encrypted during transit. 
         run: |
-          scp -r ${{ github.workspace }}/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/fxmodel
+          scp -r ${{ github.workspace }}/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu
 
       # connect ec2 and deploy
       - name: Deploy on EC2
