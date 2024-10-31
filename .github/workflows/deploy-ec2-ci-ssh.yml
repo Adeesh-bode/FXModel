@@ -28,7 +28,7 @@ jobs:
             git clone https://github.com/Adeesh-bode/FXModel.git fxmodelci
           else
             cd fxmodelci
-            git pull origin main
+            git pull origin deploy-fxmodel-docker
           fi
           cd /home/ubuntu/fxmodelci
           docker-compose down
