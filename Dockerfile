@@ -12,7 +12,7 @@ RUN pip install poetry
 
 # install dependencies using poetry
 # convey poetry not have its env in docker container
-RUN poetry config virtualenvs.create false && poetry install --no-dev --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false && poetry install --only main --no-interaction --no-ansi
 
 # copy current directory content to container at /app   /// "." means current directory // copy src dest
 COPY . /app/ 

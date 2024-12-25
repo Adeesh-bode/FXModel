@@ -1,0 +1,12 @@
+POST http://localhost:8000/match
+Content-Type: application/json
+
+{
+    "Size_Top": "L",
+    "Size_Bottom": "L",
+    "Age": 23,
+    "Weight": 80,
+    "Height": 172,
+    "Style_Preference": "Casual",
+    "Preferred_Colors": "Black"
+} 
