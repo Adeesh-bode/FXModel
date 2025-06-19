@@ -1,5 +1,5 @@
 # of compose file format
-version: "3.8"
+# version: "3.8"  //depriciated
 
 # A Dockerfile is used to build an image for a single container. 
 # Docker Compose is a tool that defines and manages multiple services (containers) that together form an application. It is used to orchestrate how different containers should run together, specifying volumes, networks, environment variables, and linking services.

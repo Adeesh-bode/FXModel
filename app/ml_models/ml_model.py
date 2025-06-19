@@ -112,6 +112,7 @@ def find_best_matches(db: Session, new_user):
     
     print("Total users fetched:", len(df))  # Print the count of users fetched
     # return top_matches[['userId', 'sizeTop', 'sizeBottom', 'age', 'weight', 'height', 'type', 'preferedColor']]
-    matches = top_matches[['userId']]
+    matches = top_matches
+    # matches = top_matches[['userId']]
     return matches  # Return only user IDs as an array
 
