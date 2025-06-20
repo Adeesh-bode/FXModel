@@ -50,4 +50,4 @@ class UserAttributes(Base):
     sizeTop = Column(String, nullable=False)
     sizeBottom = Column(String, nullable=False)
     preferedColor = Column(String, nullable=False)
-    type = Column(String, nullable=False)
+    PreferenceType = Column(String, nullable=False)

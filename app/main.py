@@ -36,7 +36,7 @@ class UserInput(BaseModel):
     age: int
     weight: float
     height: float
-    type: PreferenceType
+    PreferenceType: PreferenceType
     preferedColor: Color
 
 
@@ -56,7 +56,7 @@ async def health_check(db: Session = Depends(get_db)):
 async def get_matches(user: UserInput, db: Session = Depends(get_db)):
     new_user = user.model_dump()
 
-    # print(new_user)
+    print(new_user)
 
     try:
         matches = find_best_matches(db, new_user)

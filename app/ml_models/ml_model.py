@@ -21,7 +21,7 @@ def compatibility_pipeline():
 
 # Preprocessing pipeline for preferences (style, colors)
 def preference_pipeline():
-    categorical_features = ['type', 'preferedColor']
+    categorical_features = ['preferenceType', 'preferedColor']
 
     preprocessor = ColumnTransformer(
         transformers=[
@@ -44,7 +44,7 @@ def fetch_user_data(db: Session):
             UserAttributes.age.label("age"),
             UserAttributes.weight.label("weight"),
             UserAttributes.height.label("height"),
-            UserAttributes.type.label("type"),
+            UserAttributes.type.label("preferenceType"),
             UserAttributes.preferedColor.label("preferedColor")
         )
         .all()
@@ -55,11 +55,11 @@ def fetch_user_data(db: Session):
     
     # Convert query results to DataFrame
     df = pd.DataFrame(query, columns=[
-        "id", "userId", "sizeTop", "sizeBottom", "age", "weight", "height", "type", "preferedColor"
+        "id", "userId", "sizeTop", "sizeBottom", "age", "weight", "height", "preferenceType", "preferedColor"
     ])
 
     # Convert Enum fields to string
-    enum_columns = ["sizeTop", "sizeBottom", "type", "preferedColor"]
+    enum_columns = ["sizeTop", "sizeBottom", "preferenceType", "preferedColor"]
     for col in enum_columns:
         df[col] = df[col].apply(lambda x: x.value if isinstance(x, enum.Enum) else x)
 
@@ -88,11 +88,11 @@ def check_compatibility(df, new_user, n_neighbors=50):
 def match_preferences(compatible_users, new_user, top_n=10):
     preprocessor = preference_pipeline()
 
-    X = compatible_users[['type', 'preferedColor']]
+    X = compatible_users[['preferenceType', 'preferedColor']]
     
     transformed_data = preprocessor.fit_transform(X)
 
-    new_user_data = pd.DataFrame([new_user])[['type', 'preferedColor']]
+    new_user_data = pd.DataFrame([new_user])[['preferenceType', 'preferedColor']]
     transformed_new_user = preprocessor.transform(new_user_data)
     
     distances = pairwise_distances(transformed_new_user, transformed_data, metric='cosine')[0]
@@ -113,6 +113,7 @@ def find_best_matches(db: Session, new_user):
     print("Total users fetched:", len(df))  # Print the count of users fetched
     # return top_matches[['userId', 'sizeTop', 'sizeBottom', 'age', 'weight', 'height', 'type', 'preferedColor']]
     matches = top_matches
+    print(matches)
     # matches = top_matches[['userId']]
     return matches  # Return only user IDs as an array
 
