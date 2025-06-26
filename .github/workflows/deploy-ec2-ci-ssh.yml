@@ -31,6 +31,6 @@ jobs:
             git pull origin deploy-fxmodel-docker
           fi
           cd /home/ubuntu/fxmodelci
-          docker-compose down
-          docker-compose up -d --build
+          docker compose down
+          docker compose up -d --build
           EOF
