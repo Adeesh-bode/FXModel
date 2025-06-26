@@ -3,7 +3,7 @@ name: Deploy on EC2 CI
 on:
   push:
     branches:
-      - deploy-fxmodel-docker
+      - dev2
 
 jobs:
   deploy:
