@@ -1,36 +1,34 @@
-name: Deploy on EC2 CI
+- name: Deploy on EC2
+  run: |
+    ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+      # Install Docker if not already installed
+      if ! command -v docker &> /dev/null
+      then
+        echo "Installing Docker..."
+        sudo apt update
+        sudo apt install -y docker.io
+        sudo systemctl start docker
+        sudo systemctl enable docker
+        sudo usermod -aG docker $USER
+      fi
 
-on:
-  push:
-    branches:
-      - dev2
+      # Install Docker Compose if not already installed
+      if ! command -v docker-compose &> /dev/null
+      then
+        echo "Installing Docker Compose..."
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+      fi
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+      cd /home/ubuntu
+      if [ ! -d "fxmodelci" ]; then
+        git clone https://github.com/Adeesh-bode/FXModel.git fxmodelci
+      else
+        cd fxmodelci
+        git pull origin deploy-fxmodel-docker
+      fi
 
-    steps:
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh  
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy on EC2
-        # checks if no folder than clones , if exists than pulls latest
-        # shell scripting, fi is used to mark the end of an if statement
-        # In shell scripting, EOF (End of File) is commonly used to denote the end of a block of text that is being redirected as input to a command
-        run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          cd /home/ubuntu
-          if [ ! -d "fxmodelci" ]; then
-            git clone https://github.com/Adeesh-bode/FXModel.git fxmodelci
-          else
-            cd fxmodelci
-            git pull origin deploy-fxmodel-docker
-          fi
-          cd /home/ubuntu/fxmodelci
-          docker compose down
-          docker compose up -d --build
-          EOF
+      cd /home/ubuntu/fxmodelci
+      docker-compose down
+      docker-compose up -d --build
+    EOF
