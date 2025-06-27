@@ -44,7 +44,7 @@ def fetch_user_data(db: Session):
             UserAttributes.age.label("age"),
             UserAttributes.weight.label("weight"),
             UserAttributes.height.label("height"),
-            UserAttributes.type.label("preferenceType"),
+            UserAttributes.preferenceType.label("preferenceType"),
             UserAttributes.preferedColor.label("preferedColor")
         )
         .all()
@@ -111,7 +111,6 @@ def find_best_matches(db: Session, new_user):
     top_matches = match_preferences(compatible_users, new_user, top_n=10)
     
     print("Total users fetched:", len(df))  # Print the count of users fetched
-    # return top_matches[['userId', 'sizeTop', 'sizeBottom', 'age', 'weight', 'height', 'type', 'preferedColor']]
     matches = top_matches
     print(matches)
     # matches = top_matches[['userId']]

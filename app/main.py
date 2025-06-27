@@ -36,7 +36,7 @@ class UserInput(BaseModel):
     age: int
     weight: float
     height: float
-    PreferenceType: PreferenceType
+    preferenceType: PreferenceType
     preferedColor: Color
 
 
